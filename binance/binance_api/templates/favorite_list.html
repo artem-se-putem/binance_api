@@ -1,0 +1,23 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1>Favorite list</h1>
+<table>
+  <tr>
+    <td>Crypto_symbol</td>
+    <td>Change_24h</td>
+    <td>Delete_crypto</td>
+  </tr>
+{% for favor in favorite_crypto %}
+  <tr>
+    <td>{{ favor.crypto }}</td>
+    <td>{{ favor.user }}</td>
+    <!-- <td>{{ favor.price }}</td>
+    <td>{{ favor.change_24h }}</td> -->
+  </tr>
+  {% endfor %}
+
+</table>
+
+
+{% endblock %}

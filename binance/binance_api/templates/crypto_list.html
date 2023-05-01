@@ -1,0 +1,24 @@
+{% extends 'main.html' %}
+
+{% block content %}
+{{ article.symbol }}
+<h1>Crypto List</h1>
+<table>
+  {% if cryptos.0.price %}
+  <tr>
+    <td>Crypto_symbol</td>
+    <td>Price_now</td>
+    <td>Change_24h</td>
+    <td>Add_to_favorite</td>
+  </tr>
+  {% endif %}
+  {% for crypto in cryptos %}
+  <tr>
+    <td>{{crypto.symbol}}</td>
+    <td>{{crypto.price}}</td>
+    <td>{{crypto.change_24h}} </td>
+    <td><input type="checkbox" name="checkbox" value="{{ crypto.pk }}" id="{{ crypto.pk }}"></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

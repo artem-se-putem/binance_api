@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <p>ПРОВЕРКА В MAIN</p>
+    <p>Ваш логин: {{ request.user }}</p>
+    <form method='post' action="">
+        {% csrf_token %}
+
+        {% if not user.is_authenticated %}
+        <a href="{% url 'login_view' %}">Вход</a>
+        {% else %}
+        <input type='submit' name="btn_change_user" type="btn_submit" value="Сменить пользователя"><br>
+        <input type='submit' name="btn_login_out" type="btn_submit" value="Выйти"><br>
+        {% endif %}
+
+
+
+        <p>Прочекать крипту</p>
+        <input type="text" name="input_submit" placeholder="Название крипты" autofocus>
+        <input type='submit' name="btn_submit_ticket" type="btn_submit" value="Просмотреть крипту"><br>
+
+        <p>Вывести список всех крипт</p>
+        <input type='submit' name="btn_submit_all" type="btn_submit" value="Просмотреть список крипт"><br>
+
+        <p>Добавить в избранное</p>
+        <input type='submit' name="btn_add_favorite" type="btn_submit" value="Добавить в избранное"><br>
+
+        <p>Вывести список избранных криптовалют</p>
+        <input type='submit' name="btn_favorite_list" type="btn_submit" value="Просмотреть список избранных"><br>
+
+
+
+        {% block content %}
+        {% endblock %}
+    </form>
+
+
+</body>
+
+</html>
