@@ -5,7 +5,7 @@ from binance_api import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('binance_api.urls')),
     path('search/', views.layout), 
-    path('', views.layout),
     path('login/', views.login_view, name='login_view')
 ]

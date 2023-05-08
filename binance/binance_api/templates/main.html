@@ -10,7 +10,7 @@
 
 <body>
     <p>ПРОВЕРКА В MAIN</p>
-    <p>Ваш логин: {{ request.user }}</p>
+    <p>Ваш логин: {{ user }}</p>
     <form method='post' action="">
         {% csrf_token %}
 
@@ -21,20 +21,20 @@
         <input type='submit' name="btn_login_out" type="btn_submit" value="Выйти"><br>
         {% endif %}
 
-
-
         <p>Прочекать крипту</p>
         <input type="text" name="input_submit" placeholder="Название крипты" autofocus>
         <input type='submit' name="btn_submit_ticket" type="btn_submit" value="Просмотреть крипту"><br>
-
+        
         <p>Вывести список всех крипт</p>
         <input type='submit' name="btn_submit_all" type="btn_submit" value="Просмотреть список крипт"><br>
 
+        {% if request.path == '/search/' or '/' %}
         <p>Добавить в избранное</p>
         <input type='submit' name="btn_add_favorite" type="btn_submit" value="Добавить в избранное"><br>
+        {% endif %}
 
         <p>Вывести список избранных криптовалют</p>
-        <input type='submit' name="btn_favorite_list" type="btn_submit" value="Просмотреть список избранных"><br>
+        <input type='submit' name="btn_check_favorite_list" type="btn_submit" value="Просмотреть список избранных"><br>
 
 
 

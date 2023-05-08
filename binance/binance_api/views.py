@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 
 
-def get_all_tickers() -> list:
+def get_all_tickers():
     """Выполняется это если была нажата кнопка вывода списка крипты
     Если в бд не заполнена, то заполняет её всем что есть на бинансе
     Если бд заполнена, то обновляет всю бд"""
@@ -45,7 +45,7 @@ def get_all_tickers() -> list:
         return context
 
 
-def get_one_ticket(symbol="") -> list:
+def get_one_ticket(symbol=""):
     """Выполняется это если была нажата кнопка поиска конкретной крипты"""
 
     url_name_price = "https://api.binance.com/api/v3/ticker/price"
@@ -68,40 +68,30 @@ def get_one_ticket(symbol="") -> list:
 
 @login_required
 def add_to_favorite(request):
-    if request.method == 'POST':
+    pk_list = request.POST.getlist('checkbox')
+    favorite_objects = Crypto.objects.filter(pk__in=pk_list)
+    for favor in favorite_objects:
+        Favorite_crypto.objects.update_or_create(
+            crypto=favor, user=request.user)
 
-        pk_list = request.POST.getlist('checkbox')
-        favorite_objects = Crypto.objects.filter(pk__in=pk_list)
-        for favor in favorite_objects:
-            Favorite_crypto.objects.update_or_create(
-                crypto=favor, user=request.user)
+    context = Favorite_crypto.objects.filter(user=request.user)
+    return render(request, 'favorite_list.html', {'favorite_crypto': context, 'pk_list': pk_list})
 
-        context = Favorite_crypto.objects.filter(user=request.user)
-        return render(request, 'favorite_list.html', {'favorite_crypto': context, 'pk_list': pk_list})
+@login_required
+def check_favorite_list(request):
+
+    context = Favorite_crypto.objects.filter(user=request.user)
+    return render(request, 'favorite_list.html', {'favorite_crypto': context})
 
 @login_required
 def delete_to_favorite(request):
     pass
 
 @login_required
-def favorite_list():
+def favorite_list(request):
 
     context = Favorite_crypto.objects.all()
     return render(request, 'favorite_list.html', {'cryptos': [{'favorite_crypto': context}]})
-
-
-#Не дописан
-def change_user(request):
-    if request.method == 'POST':
-
-        pk_list = request.POST.getlist('checkbox')
-        favorite_objects = Crypto.objects.filter(pk__in=pk_list)
-        for favor in favorite_objects:
-            Favorite_crypto.objects.update_or_create(
-                crypto=favor, user=request.user)
-
-        context = Favorite_crypto.objects.filter(user=request.user)
-        return render(request, 'favorite_list.html', {'favorite_crypto': context, 'pk_list': pk_list})
 
 
 def login_view(request):
@@ -118,9 +108,6 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
-def login_out(request):
-    pass
-
 
 def layout(request):
     if request.method == "POST":
@@ -132,13 +119,14 @@ def layout(request):
             cryptos = get_all_tickers()
 
         elif request.POST.get("btn_add_favorite"):
-            return add_to_favorite(request)
-        
-        elif request.POST.get("btn_change_user"):
-            return redirect('/login')
+            return redirect('favorite_list')
+            # return add_to_favorite(request)
 
-        elif request.POST.get("btn_login_out"):
-            return 
+        elif request.POST.get("btn_check_favorite_list"):
+            return check_favorite_list(request)
+        
+        elif request.POST.get("btn_change_user") or request.POST.get("btn_login_out"):
+            return redirect('/login')
 
         return render(request, 'crypto_list.html', {'cryptos': cryptos})
     return render(request, 'crypto_list.html', {'cryptos': [{'symbol': 'Введите название криптовалюты'}]})
